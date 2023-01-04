@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {useAppState, useBoard} from "../injectors/useAppState";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import {useBoardInfo} from "../injectors/useBoardInfo";
 import {AppStateInterface} from "../providers/boardProvider/boardProvider.types";
 
@@ -36,6 +36,11 @@ onMounted(() => {
   buildGrid(boardInfo.grid);
   moveGridToBack(state);
 });
+
+watch(state.items.grid, () => {
+  buildGrid(boardInfo.grid);
+  moveGridToBack(state);
+})
 </script>
 
 <template></template>
