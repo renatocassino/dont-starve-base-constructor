@@ -41,6 +41,12 @@ watch(state.items.grid, () => {
   buildGrid(boardInfo.grid);
   moveGridToBack(state);
 })
+
+watch(state.showGrid, () => {
+  state.items.grid.value.forEach((line) => {
+    line.stroke({ opacity: state.showGrid.value ? 0.5 : 0 });
+  })
+});
 </script>
 
 <template></template>

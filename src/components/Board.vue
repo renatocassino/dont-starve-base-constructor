@@ -4,6 +4,7 @@ import { onMounted, ref, watch} from 'vue';
 import { useBoardInfo } from "../injectors/useBoardInfo";
 import Grid from './Grid.vue';
 import {useAppState, useBoard} from "../injectors/useAppState";
+import Crockpot from "./dragableItems/Crockpot.vue";
 
 const board = useBoardInfo()!;
 const state = useAppState()!;
@@ -32,10 +33,8 @@ function findNextDivisor(v: number, grid: number) {
   return  (upper < down) ? v + upper : v - down;
 }
 
-onMounted(() => {
-  state.board.value = SVG().addTo('#drawer-svg').size('100%', '100%');
-
-  const image = draw.value!.image('/src/assets/crockpot.png').move(100, 100);
+function buildImage() {
+  const image = draw.value!.image('/src/assets/crockpot.png').move(0, 0);
   image.size(50, 53);
 
   image.on('mousedown', () => {
@@ -58,16 +57,35 @@ onMounted(() => {
     image.move(diffx, diffy);
   });
 
+  return image;
+}
+
+onMounted(() => {
+  state.board.value = SVG().addTo('#drawer-svg').size('100%', '100%');
   window.addEventListener('mouseup', function (event) {
     state.isDragging.value = false;
     state.selectedItem.value = null;
   });
 });
+
+const addCrockPot = () => {
+  state.items.drawableItems.value.push(buildImage());
+}
 </script>
 
 <template>
   <div>
-    <Grid v-if="state.board.value" />
+    <button @click="() => state.showGrid.value = !state.showGrid.value">
+      <template v-if="state.showGrid.value">Hide Grid</template>
+      <template v-else>Show Grid</template>
+    </button>
+    <button @click="addCrockPot">Add Crockpot</button>
+    <template v-if="state.board.value">
+      <Grid />
+      <template v-for="item in state.items.drawableItems">
+        <Crockpot :item="item" />
+      </template>
+    </template>
     <table>
       <tr>
         <td>Is dragging</td>
