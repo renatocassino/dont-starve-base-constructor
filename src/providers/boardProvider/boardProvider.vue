@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
 import {provide, ref} from "vue";
-import { APP_STATE, BOARD_INFO } from "../../constants/keys";
+import {APP_STATE, BOARD_INFO, ITEM_LIST} from "../../constants/keys";
 import type { AppStateInterface } from "./boardProvider.types";
 
 provide(BOARD_INFO, {
@@ -20,12 +20,15 @@ provide<AppStateInterface>(APP_STATE, {
     drawableItems: ref({}),
     items: ref([]),
   },
-  factoryItem() {
+  factoryItem(item: string) {
     this.items.items.value.push({
       id: uuidv4(),
+      item,
     });
   }
 });
+
+provide<string[]>(ITEM_LIST, ['crockpot', 'shadow-manipulator', 'birdcage', 'meat-effigy', 'houndius-hootius', 'pig-house']);
 </script>
 
 <template>

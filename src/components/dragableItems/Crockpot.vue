@@ -12,7 +12,7 @@ const state = useAppState()!;
 const draw = useBoard()!;
 
 function buildImage() {
-  const image = draw.value!.image('/src/assets/crockpot.png').move(0, 0);
+  const image = draw.value!.image(`/src/assets/${item.item}.png`).move(0, 0);
   image.size(50, 53);
   image.css({ transition: '0.3s transform, 0.3s filter' });
 

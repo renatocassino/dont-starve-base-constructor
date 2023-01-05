@@ -1,29 +1,29 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { v4 as uuidv4 } from 'uuid';
 import {useAppState, useBoard} from "../../injectors/useAppState";
 import {useBoardInfo} from "../../injectors/useBoardInfo";
-import {findNextDivisor} from "../../utils/findNextDivisor";
+import {useGetListOfItems} from "../../injectors/useGetListOfItems";
 
 const menuOpened = ref(false);
 const state = useAppState()!;
-const board = useBoardInfo()!;
-const draw = useBoard()!;
+const listOfItems = useGetListOfItems();
 
 const handleClick = () => menuOpened.value = !menuOpened.value;
-
-const handleAddItem = () => {
-  state.factoryItem();
+const handleAddItem = (item: string) => {
+  console.log(item);
+  state.factoryItem(item);
 };
 </script>
 
 <template>
   <div>
     <section :class="{ 'left-menu': true, 'left-menu--opened': menuOpened}">
-      <div>
-        <button @click="handleAddItem">
-          <img src="/src/assets/crockpot.png" width="40" />
-        </button>
+      <div class="list">
+        <div v-for="item in listOfItems">
+          <button @click="handleAddItem(item)">
+            <img :src="`/src/assets/${item}.png`" width="40" />
+          </button>
+        </div>
       </div>
       <div>
         <button class="toggle-button" @click="handleClick">Abrir</button>
@@ -69,5 +69,14 @@ const handleAddItem = () => {
     pointer-events: none;
     opacity: 0;
   }
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  max-width: 100%;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 </style>

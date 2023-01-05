@@ -3,6 +3,7 @@ import {Image, Line, Svg} from "@svgdotjs/svg.js";
 
 export interface Item {
   id: string;
+  item: string;
 }
 
 export interface AppStateInterface {
@@ -15,5 +16,5 @@ export interface AppStateInterface {
     drawableItems: Ref<{ [key: string]: Image }>,
     items: Ref<Item[]>,
   };
-  factoryItem: () => void;
+  factoryItem: (item: string) => void;
 }
