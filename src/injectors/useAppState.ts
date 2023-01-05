@@ -7,5 +7,6 @@ export const useAppState = () => {
 }
 
 export const useBoard = () => {
+  window.__state = useAppState();
   return useAppState()?.board;
 }

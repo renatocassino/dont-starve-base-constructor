@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { v4 as uuidv4 } from 'uuid';
 import {useAppState, useBoard} from "../../injectors/useAppState";
 import {useBoardInfo} from "../../injectors/useBoardInfo";
+import {findNextDivisor} from "../../utils/findNextDivisor";
 
 const menuOpened = ref(false);
 const state = useAppState()!;
@@ -10,58 +12,8 @@ const draw = useBoard()!;
 
 const handleClick = () => menuOpened.value = !menuOpened.value;
 
-function findNextDivisor(v: number, grid: number) {
-  if (v % grid === 0) {
-    return v;
-  }
-  let upper, down;
-
-  for(let i = 0; true; i++) {
-    if ((v + i) % grid === 0) {
-      upper = i;
-      break;
-    }
-  }
-
-  for(let i = 0; true; i++) {
-    if ((v - i) % grid === 0) {
-      down = i;
-      break;
-    }
-  }
-
-  return  (upper < down) ? v + upper : v - down;
-}
-
-function buildImage() {
-  const image = draw.value!.image('/src/assets/crockpot.png').move(0, 0);
-  image.size(50, 53);
-
-  image.on('mousedown', () => {
-    state.isDragging.value = true;
-    state.selectedItem.value = image;
-  });
-
-  image.on('click', () => {
-    state.selectedItem.value = image;
-  });
-
-  image.on('mousemove', function (event) {
-    if (!state.isDragging.value) {
-      return;
-    }
-
-    let diffx = findNextDivisor(event.offsetX - 25, board.grid);
-    let diffy = findNextDivisor(event.offsetY - 26, board.grid);
-
-    image.move(diffx, diffy);
-  });
-
-  return image;
-}
-
 const handleAddItem = () => {
-  state.items.drawableItems.value.push(buildImage());
+  state.factoryItem();
 };
 </script>
 
